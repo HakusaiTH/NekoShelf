@@ -27,7 +27,25 @@ const initSql = `
 `;
 
 db.run(initSql, (err) => {
-  if (err) console.error('Error creating table:', err.message);
+  if (err) {
+    console.error('Error creating table:', err.message);
+  } else {
+    // Seed default sample books if table is empty
+    db.get('SELECT COUNT(*) as count FROM books', [], (err, row) => {
+      if (!err && row && row.count === 0) {
+        const seedBooks = [
+          ['Clean Code', 'Robert C. Martin', 'Technology', 2008],
+          ['The Great Gatsby', 'F. Scott Fitzgerald', 'Classic', 1925],
+          ['1984', 'George Orwell', 'Dystopian', 1949],
+          ['To Kill a Mockingbird', 'Harper Lee', 'Fiction', 1960],
+          ['Designing Data-Intensive Applications', 'Martin Kleppmann', 'Technology', 2017]
+        ];
+        const stmt = db.prepare('INSERT INTO books (title, author, genre, published_year) VALUES (?, ?, ?, ?)');
+        seedBooks.forEach((book) => stmt.run(book));
+        stmt.finalize(() => console.log('Seeded initial sample books into database.'));
+      }
+    });
+  }
 });
 
 module.exports = db;

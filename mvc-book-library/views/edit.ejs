@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1><%= title %></h1>
+    <form action="/books/<%= book.id %>?_method=PUT" method="POST" class="form">
+      <label>Title</label>
+      <input type="text" name="title" value="<%= book.title %>" required />
+
+      <label>Author</label>
+      <input type="text" name="author" value="<%= book.author %>" required />
+
+      <label>Genre</label>
+      <input type="text" name="genre" value="<%= book.genre || '' %>" />
+
+      <label>Published Year</label>
+      <input type="number" name="published_year" value="<%= book.published_year || '' %>" />
+
+      <div class="form-actions">
+        <button class="btn btn-add" type="submit">Update Book</button>
+        <a class="btn btn-cancel" href="/">Cancel</a>
+      </div>
+    </form>
+  </div>
+</body>
+</html>

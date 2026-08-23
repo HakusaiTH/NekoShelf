@@ -1,0 +1,16 @@
+{
+  "name": "mvc-book-library",
+  "version": "1.0.0",
+  "description": "Simple MVC exercise: Express (Controller) + EJS (View) + SQLite (Model)",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "node app.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "ejs": "^3.1.10",
+    "sqlite3": "^5.1.7",
+    "method-override": "^3.0.0"
+  }
+}

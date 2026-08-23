@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1><%= title %></h1>
+    <form action="/books" method="POST" class="form">
+      <label>Title</label>
+      <input type="text" name="title" required />
+
+      <label>Author</label>
+      <input type="text" name="author" required />
+
+      <label>Genre</label>
+      <input type="text" name="genre" />
+
+      <label>Published Year</label>
+      <input type="number" name="published_year" />
+
+      <div class="form-actions">
+        <button class="btn btn-add" type="submit">Save Book</button>
+        <a class="btn btn-cancel" href="/">Cancel</a>
+      </div>
+    </form>
+  </div>
+</body>
+</html>

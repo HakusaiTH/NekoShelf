@@ -89,6 +89,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 1.5rem;
 }
 
 .brand {
@@ -112,6 +113,50 @@ body {
   justify-content: center;
   font-size: 1.25rem;
   box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3);
+}
+
+.nav-search-wrap {
+  flex: 1;
+  max-width: 420px;
+  position: relative;
+}
+
+.nav-search-form {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.nav-search-icon {
+  position: absolute;
+  left: 0.85rem;
+  color: var(--text-light);
+  pointer-events: none;
+}
+
+.nav-search-input {
+  width: 100%;
+  padding: 0.55rem 1rem 0.55rem 2.5rem;
+  background: var(--bg-main);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-sm);
+  font-size: 0.875rem;
+  color: var(--text-main);
+  transition: var(--transition);
+}
+
+.nav-search-input:focus {
+  outline: none;
+  background: var(--bg-card);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 }
 
 /* Hero & Dashboard Cards */
@@ -809,14 +854,83 @@ body {
 }
 
 /* Footer */
-.footer {
+.site-footer {
   margin-top: auto;
   background: var(--bg-card);
   border-top: 1px solid var(--border-color);
-  padding: 1.5rem 0;
-  text-align: center;
+  padding: 2rem 0;
   color: var(--text-muted);
   font-size: 0.9rem;
+}
+
+.footer-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+
+.footer-brand-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.footer-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.footer-tagline {
+  font-size: 0.825rem;
+  color: var(--text-light);
+}
+
+.footer-credits {
+  text-align: center;
+}
+
+.team-credit {
+  font-size: 0.825rem;
+  margin-top: 0.25rem;
+}
+
+.team-credit strong {
+  color: var(--primary);
+}
+
+.footer-social {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.social-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--bg-main);
+  color: var(--text-muted);
+  border: 1px solid var(--border-color);
+  transition: var(--transition);
+  text-decoration: none;
+}
+
+.social-link:hover {
+  color: var(--primary);
+  background: var(--primary-light);
+  border-color: var(--primary-light);
+  transform: translateY(-2px);
 }
 
 /* Responsive Breakpoints */
@@ -833,5 +947,21 @@ body {
   }
   .dashboard-hero {
     padding: 1.5rem;
+  }
+  .nav-container {
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  .nav-search-wrap {
+    max-width: 100%;
+    order: 3;
+    width: 100%;
+  }
+  .footer-container {
+    flex-direction: column;
+    text-align: center;
+  }
+  .footer-brand-info {
+    align-items: center;
   }
 }

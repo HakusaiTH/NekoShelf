@@ -5,27 +5,83 @@
   <title><%= title %></title>
   <link rel="stylesheet" href="/css/style.css" />
 </head>
-<body>
-  <div class="container">
-    <h1><%= title %></h1>
-    <form action="/books" method="POST" class="form">
-      <label>Title</label>
-      <input type="text" name="title" required />
-
-      <label>Author</label>
-      <input type="text" name="author" required />
-
-      <label>Genre</label>
-      <input type="text" name="genre" />
-
-      <label>Published Year</label>
-      <input type="number" name="published_year" />
-
-      <div class="form-actions">
-        <button class="btn btn-add" type="submit">Save Book</button>
-        <a class="btn btn-cancel" href="/">Cancel</a>
+<body class="form-page">
+  <main class="form-shell">
+    <section class="form-card" aria-labelledby="add-book-title">
+      <div class="form-heading">
+        <div class="form-heading-icon" aria-hidden="true">
+          <svg class="svg-icon" width="24" height="24" viewBox="0 0 24 24">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z" />
+            <path d="M8 6h8M8 10h6" />
+          </svg>
+        </div>
+        <div>
+          <p class="form-eyebrow">Library collection</p>
+          <h1 id="add-book-title"><%= title %></h1>
+          <p class="form-intro">Add a new title to your personal catalogue.</p>
+        </div>
       </div>
-    </form>
-  </div>
+
+      <form action="/books" method="POST" class="form">
+        <div class="form-field">
+          <label for="book-title">Title</label>
+          <div class="input-wrap">
+            <svg class="svg-icon input-icon" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+              <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z" />
+            </svg>
+            <input id="book-title" type="text" name="title" placeholder="e.g. The Great Gatsby" required />
+          </div>
+        </div>
+
+        <div class="form-field">
+          <label for="book-author">Author</label>
+          <div class="input-wrap">
+            <svg class="svg-icon input-icon" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M20 21a8 8 0 0 0-16 0" />
+              <circle cx="12" cy="7" r="4" />
+            </svg>
+            <input id="book-author" type="text" name="author" placeholder="e.g. F. Scott Fitzgerald" required />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-field">
+            <label for="book-genre">Genre</label>
+            <div class="input-wrap">
+              <svg class="svg-icon input-icon" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="m12 3 8 4-8 4-8-4 8-4Z" />
+                <path d="m4 12 8 4 8-4M4 17l8 4 8-4" />
+              </svg>
+              <input id="book-genre" type="text" name="genre" placeholder="e.g. Fiction" />
+            </div>
+          </div>
+
+          <div class="form-field">
+            <label for="published-year">Published Year</label>
+            <div class="input-wrap">
+              <svg class="svg-icon input-icon" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
+                <rect x="3" y="4" width="18" height="17" rx="2" />
+                <path d="M16 2v4M8 2v4M3 10h18" />
+              </svg>
+              <input id="published-year" type="number" name="published_year" placeholder="e.g. 1925" />
+            </div>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <a class="btn btn-cancel" href="/">Cancel</a>
+          <button class="btn btn-add" type="submit">
+            <svg class="svg-icon" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2Z" />
+              <path d="M17 21v-8H7v8M7 3v5h8" />
+            </svg>
+            Save Book
+          </button>
+        </div>
+      </form>
+    </section>
+  </main>
 </body>
 </html>

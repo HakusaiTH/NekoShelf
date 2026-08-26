@@ -17,10 +17,10 @@ const BookModel = {
 
   // CREATE
   create: (book, callback) => {
-    const { title, author, genre, published_year } = book;
+    const { title, author, genre, published_year, cover_image, description } = book;
     db.run(
-      'INSERT INTO books (title, author, genre, published_year) VALUES (?, ?, ?, ?)',
-      [title, author, genre, published_year],
+      'INSERT INTO books (title, author, genre, published_year, cover_image, description) VALUES (?, ?, ?, ?, ?, ?)',
+      [title, author, genre, published_year, cover_image || null, description || null],
       function (err) {
         // `this.lastID` gives the id of the newly inserted row
         callback(err, this ? this.lastID : null);
@@ -30,12 +30,20 @@ const BookModel = {
 
   // UPDATE
   update: (id, book, callback) => {
-    const { title, author, genre, published_year } = book;
-    db.run(
-      'UPDATE books SET title = ?, author = ?, genre = ?, published_year = ? WHERE id = ?',
-      [title, author, genre, published_year, id],
-      callback
-    );
+    const { title, author, genre, published_year, cover_image, description } = book;
+    if (cover_image !== undefined) {
+      db.run(
+        'UPDATE books SET title = ?, author = ?, genre = ?, published_year = ?, cover_image = ?, description = ? WHERE id = ?',
+        [title, author, genre, published_year, cover_image, description || null, id],
+        callback
+      );
+    } else {
+      db.run(
+        'UPDATE books SET title = ?, author = ?, genre = ?, published_year = ?, description = ? WHERE id = ?',
+        [title, author, genre, published_year, description || null, id],
+        callback
+      );
+    }
   },
 
   // DELETE

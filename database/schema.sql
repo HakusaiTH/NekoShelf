@@ -8,5 +8,7 @@ CREATE TABLE IF NOT EXISTS books (
     author TEXT NOT NULL,
     genre TEXT,
     published_year INTEGER,
+    cover_image TEXT,
+    description TEXT,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );

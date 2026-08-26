@@ -12,9 +12,6 @@
   <nav class="navbar">
     <div class="nav-container">
       <a href="/" class="brand">
-        <div class="brand-icon">
-          <svg class="svg-icon" width="22" height="22" viewBox="0 0 24 24"><path d="m16 6 4 14"/><path d="M12 6v14"/><path d="M8 8v12"/><path d="M4 4v16"/></svg>
-        </div>
         <span>BookHub</span>
       </a>
       <a href="/books/add" class="btn btn-primary">
@@ -30,10 +27,7 @@
     <!-- Dashboard Hero Banner -->
     <section class="dashboard-hero">
       <div class="hero-header">
-        <h1>
-          <svg class="svg-icon" width="32" height="32" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
-          <%= title %>
-        </h1>
+        <h1><%= title %></h1>
         <p>Explore, organize, and manage your group library collection with ease.</p>
       </div>
 
@@ -159,13 +153,17 @@
           >
             <!-- Card 3D Banner Header -->
             <div class="card-banner" style="background: <%= bgGradient %>;">
-              <!-- 3D Mini Book Cover -->
-              <div class="book-cover-3d">
-                <div class="book-spine"></div>
-                <div class="book-cover-content">
-                  <span class="book-initial"><%= book.title.charAt(0).toUpperCase() %></span>
+              <% if (book.cover_image) { %>
+                <img class="book-cover-img" src="<%= book.cover_image %>" alt="<%= book.title %>" />
+              <% } else { %>
+                <!-- 3D Mini Book Cover -->
+                <div class="book-cover-3d">
+                  <div class="book-spine"></div>
+                  <div class="book-cover-content">
+                    <span class="book-initial"><%= book.title.charAt(0).toUpperCase() %></span>
+                  </div>
                 </div>
-              </div>
+              <% } %>
               
               <% if (book.genre) { %>
                 <span class="badge-genre"><%= book.genre %></span>
@@ -197,6 +195,10 @@
 
             <!-- Card Action Footer -->
             <div class="card-actions">
+              <button class="btn btn-sm btn-detail" onclick="showBookDetail(<%= book.id %>)" type="button">
+                <svg class="svg-icon" width="14" height="14" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+                Detail
+              </button>
               <a class="btn btn-sm btn-edit" href="/books/<%= book.id %>/edit">
                 <svg class="svg-icon" width="14" height="14" viewBox="0 0 24 24"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg>
                 Edit
@@ -236,7 +238,16 @@
                 data-author="<%= book.author.toLowerCase() %>"
                 data-genre="<%= (book.genre || '').toLowerCase() %>"
               >
-                <td><strong><%= book.title %></strong></td>
+                <td>
+                  <div class="table-title-cell">
+                    <% if (book.cover_image) { %>
+                      <img class="table-thumb-img" src="<%= book.cover_image %>" alt="<%= book.title %>" />
+                    <% } else { %>
+                      <div class="table-thumb-placeholder"><%= book.title.charAt(0).toUpperCase() %></div>
+                    <% } %>
+                    <strong><%= book.title %></strong>
+                  </div>
+                </td>
                 <td><%= book.author %></td>
                 <td>
                   <% if (book.genre) { %>
@@ -247,6 +258,10 @@
                 </td>
                 <td><%= book.published_year || '-' %></td>
                 <td style="text-align: right;">
+                  <button class="btn btn-sm btn-detail" onclick="showBookDetail(<%= book.id %>)" type="button">
+                    <svg class="svg-icon" width="14" height="14" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+                    Detail
+                  </button>
                   <a class="btn btn-sm btn-edit" href="/books/<%= book.id %>/edit">
                     <svg class="svg-icon" width="14" height="14" viewBox="0 0 24 24"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg>
                     Edit
@@ -272,6 +287,16 @@
 
   </main>
 
+  <!-- Book Detail Modal -->
+  <dialog id="detail-modal" class="detail-modal">
+    <div class="modal-wrapper">
+      <button type="button" class="modal-close-btn" onclick="closeBookDetail()">&times;</button>
+      <div class="modal-body" id="modal-content">
+        <div class="modal-loading">Loading book details...</div>
+      </div>
+    </div>
+  </dialog>
+
   <!-- Footer -->
   <footer class="footer">
     <div class="nav-container" style="justify-content: center;">
@@ -279,7 +304,7 @@
     </div>
   </footer>
 
-  <!-- Interactive JavaScript for Live Filter & View Switching -->
+  <!-- Interactive JavaScript for Live Filter, View Switching, & Modal -->
   <script>
     const searchInput = document.getElementById('searchInput');
     const genreFilter = document.getElementById('genreFilter');
@@ -348,6 +373,84 @@
         tableView.style.display = 'block';
       });
     }
+
+    // Book Detail Modal Handling
+    async function showBookDetail(id) {
+      const modal = document.getElementById('detail-modal');
+      const modalContent = document.getElementById('modal-content');
+      modalContent.innerHTML = '<div class="modal-loading"><div class="spinner"></div><p>Loading full book details...</p></div>';
+      modal.showModal();
+
+      try {
+        const response = await fetch('/books/' + id + '/json');
+        if (!response.ok) throw new Error('Book details not found');
+        const book = await response.json();
+
+        const formattedDate = book.created_at ? new Date(book.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : null;
+
+        const coverHtml = book.cover_image 
+          ? `<div class="modal-cover-card"><img src="${book.cover_image}" alt="${book.title}" class="modal-cover-img" /></div>`
+          : `<div class="modal-cover-card modal-cover-placeholder-card"><div class="modal-cover-3d-big"><div class="book-spine-big"></div><span class="modal-cover-initial">${book.title.charAt(0).toUpperCase()}</span></div></div>`;
+
+        modalContent.innerHTML = `
+          <div class="modal-book-grid">
+            <div class="modal-cover-wrap">
+              ${coverHtml}
+            </div>
+            <div class="modal-info-wrap">
+              <div class="modal-header-meta">
+                <span class="modal-eyebrow">Library Catalog Record</span>
+                <span class="modal-id-badge">ID #${book.id}</span>
+              </div>
+              <h2 class="modal-title">${book.title}</h2>
+              <p class="modal-author">by <strong>${book.author}</strong></p>
+              
+              <div class="modal-stats-cards">
+                <div class="modal-stat-box">
+                  <span class="modal-stat-label">Genre</span>
+                  <span class="modal-stat-val primary-text">${book.genre || 'Uncategorized'}</span>
+                </div>
+                <div class="modal-stat-box">
+                  <span class="modal-stat-label">Published Year</span>
+                  <span class="modal-stat-val">${book.published_year || 'N/A'}</span>
+                </div>
+                ${formattedDate ? `
+                <div class="modal-stat-box">
+                  <span class="modal-stat-label">Added Date</span>
+                  <span class="modal-stat-val">${formattedDate}</span>
+                </div>` : ''}
+              </div>
+
+              <div class="modal-description-section">
+                <h4>Book Description / Summary</h4>
+                ${book.description ? `<p class="desc-text">${book.description.replace(/\n/g, '<br>')}</p>` : `<p class="no-desc">No description available for this book.</p>`}
+              </div>
+
+              <div class="modal-footer-actions">
+                <a href="/books/${book.id}/edit" class="btn btn-primary btn-lg">
+                  <svg class="svg-icon" width="18" height="18" viewBox="0 0 24 24"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg>
+                  Edit Book
+                </a>
+                <button type="button" class="btn btn-cancel btn-lg" onclick="closeBookDetail()">Close View</button>
+              </div>
+            </div>
+          </div>
+        `;
+      } catch (err) {
+        modalContent.innerHTML = `<div class="modal-error"><p>Error loading details: ${err.message}</p><button class="btn btn-cancel" onclick="closeBookDetail()">Close</button></div>`;
+      }
+    }
+
+    function closeBookDetail() {
+      const modal = document.getElementById('detail-modal');
+      modal.close();
+    }
+
+    document.getElementById('detail-modal').addEventListener('click', (e) => {
+      if (e.target === document.getElementById('detail-modal')) {
+        closeBookDetail();
+      }
+    });
   </script>
 </body>
 </html>

@@ -11,17 +11,93 @@
     <section class="edit-card" aria-labelledby="edit-title">
       <div class="edit-card-header">
         <div><span class="eyebrow">Library record</span><h1 id="edit-title"><%= title %></h1><p>Keep this book's details accurate and easy to discover.</p></div>
-        <div class="edit-mark" aria-hidden="true"><svg class="svg-icon" width="30" height="30" viewBox="0 0 24 24"><path d="M12 20h9" /><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L8 18l-4 1 1-4Z" /></svg></div>
       </div>
 
-      <form action="/books/<%= book.id %>?_method=PUT" method="POST" class="edit-form">
-        <div class="field-grid">
-          <div class="form-field form-field-wide"><label for="title">Title</label><div class="input-wrap"><svg class="svg-icon" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" /><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z" /></svg><input id="title" type="text" name="title" value="<%= book.title %>" required /></div></div>
-          <div class="form-field"><label for="author">Author</label><div class="input-wrap"><svg class="svg-icon" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 21a8 8 0 0 0-16 0" /><circle cx="12" cy="7" r="4" /></svg><input id="author" type="text" name="author" value="<%= book.author %>" required /></div></div>
-          <div class="form-field"><label for="genre">Genre <span>(optional)</span></label><div class="input-wrap"><svg class="svg-icon" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="m20.59 13.41-7.17 7.17a2 2 0 0 1-2.83 0L3 13V4h9l8.59 8.59a2 2 0 0 1 0 2.82Z" /><circle cx="7.5" cy="8.5" r=".5" /></svg><input id="genre" type="text" name="genre" value="<%= book.genre || '' %>" /></div></div>
-          <div class="form-field"><label for="published-year">Published year <span>(optional)</span></label><div class="input-wrap"><svg class="svg-icon" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2" /><path d="M16 2v4M8 2v4M3 10h18" /></svg><input id="published-year" type="number" name="published_year" value="<%= book.published_year || '' %>" /></div></div>
+      <% if (typeof error !== 'undefined' && error) { %>
+        <div class="form-alert-error" style="margin: 1.5rem 2.5rem 0;">
+          <svg class="svg-icon" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <span><%= error %></span>
         </div>
-        <div class="form-actions"><a class="btn btn-cancel" href="/">Cancel</a><button class="btn btn-primary" type="submit"><svg class="svg-icon" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2Z" /><path d="M17 21v-8H7v8M7 3v5h8" /></svg>Update Book</button></div>
+      <% } %>
+
+      <form action="/books/<%= book.id %>?_method=PUT" method="POST" enctype="multipart/form-data" class="edit-form">
+        <input type="hidden" name="existing_cover_image" value="<%= book.cover_image || '' %>" />
+        
+        <div class="field-grid">
+          <div class="form-field form-field-wide">
+            <label for="title">Title</label>
+            <div class="input-wrap">
+              <svg class="svg-icon" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" /><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z" /></svg>
+              <input id="title" type="text" name="title" value="<%= book.title %>" required />
+            </div>
+          </div>
+          
+          <div class="form-field">
+            <label for="author">Author</label>
+            <div class="input-wrap">
+              <svg class="svg-icon" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 21a8 8 0 0 0-16 0" /><circle cx="12" cy="7" r="4" /></svg>
+              <input id="author" type="text" name="author" value="<%= book.author %>" required />
+            </div>
+          </div>
+          
+          <div class="form-field">
+            <label for="genre">Genre <span>(optional)</span></label>
+            <div class="input-wrap">
+              <svg class="svg-icon" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="m20.59 13.41-7.17 7.17a2 2 0 0 1-2.83 0L3 13V4h9l8.59 8.59a2 2 0 0 1 0 2.82Z" /><circle cx="7.5" cy="8.5" r=".5" /></svg>
+              <select id="genre" name="genre" class="select-input">
+                <option value="">Select Genre...</option>
+                <% (typeof genres !== 'undefined' ? genres : ['Fiction', 'Non-Fiction', 'Technology', 'Classic', 'Dystopian', 'Fantasy', 'Sci-Fi', 'Mystery', 'Romance', 'Biography', 'History', 'Other']).forEach(g => { %>
+                  <option value="<%= g %>" <%= (book.genre === g) ? 'selected' : '' %>><%= g %></option>
+                <% }) %>
+              </select>
+            </div>
+          </div>
+          
+          <div class="form-field">
+            <label for="published-year">Published year <span>(optional)</span></label>
+            <div class="input-wrap">
+              <svg class="svg-icon" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2" /><path d="M16 2v4M8 2v4M3 10h18" /></svg>
+              <input id="published-year" type="number" name="published_year" value="<%= book.published_year || '' %>" />
+            </div>
+          </div>
+
+          <div class="form-field form-field-wide">
+            <label for="cover-image">Change Cover Image <span>(optional)</span></label>
+            <div class="file-upload-wrap">
+              <input id="cover-image" type="file" name="cover_image" accept="image/*" class="file-input" onchange="previewCoverImage(this)" />
+              <label for="cover-image" class="file-dropzone">
+                <div id="upload-placeholder" class="upload-placeholder" style="<%= book.cover_image ? 'display: none;' : '' %>">
+                  <svg class="svg-icon" width="28" height="28" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                    <polyline points="17 8 12 3 7 8" />
+                    <line x1="12" y1="3" x2="12" y2="15" />
+                  </svg>
+                  <p><strong>Click to upload new cover image</strong></p>
+                  <span class="file-hint">PNG, JPG, WEBP or GIF (Max 5MB)</span>
+                </div>
+                <div id="image-preview-container" class="image-preview-container" style="<%= book.cover_image ? 'display: flex;' : 'display: none;' %>">
+                  <img id="image-preview" src="<%= book.cover_image || '#' %>" alt="Cover Preview" />
+                  <button type="button" class="btn-remove-preview" onclick="removePreview(event)">Change</button>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <div class="form-field form-field-wide">
+            <label for="description">Description / Book Summary <span>(optional)</span></label>
+            <div class="input-wrap textarea-wrap">
+              <textarea id="description" name="description" rows="3" placeholder="Brief story summary or book details..."><%= book.description || '' %></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <a class="btn btn-cancel" href="/">Cancel</a>
+          <button class="btn btn-primary" type="submit">
+            <svg class="svg-icon" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2Z" /><path d="M17 21v-8H7v8M7 3v5h8" /></svg>
+            Update Book
+          </button>
+        </div>
       </form>
 
       <section class="danger-zone" aria-labelledby="danger-title"><div><span class="eyebrow danger-eyebrow">Danger zone</span><h2 id="danger-title">Remove this book</h2><p>This permanently deletes the record from your library.</p></div><button class="btn btn-delete" type="button" id="open-delete-dialog"><svg class="svg-icon" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6M10 11v5M14 11v5" /></svg>Delete book</button></section>
@@ -35,6 +111,34 @@
     document.getElementById('open-delete-dialog').addEventListener('click', () => deleteDialog.showModal());
     document.getElementById('cancel-delete').addEventListener('click', () => deleteDialog.close());
     deleteDialog.addEventListener('click', (event) => { if (event.target === deleteDialog) deleteDialog.close(); });
+
+    function previewCoverImage(input) {
+      const placeholder = document.getElementById('upload-placeholder');
+      const previewContainer = document.getElementById('image-preview-container');
+      const previewImage = document.getElementById('image-preview');
+
+      if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          previewImage.src = e.target.result;
+          placeholder.style.display = 'none';
+          previewContainer.style.display = 'flex';
+        }
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+
+    function removePreview(event) {
+      event.preventDefault();
+      event.stopPropagation();
+      const input = document.getElementById('cover-image');
+      const placeholder = document.getElementById('upload-placeholder');
+      const previewContainer = document.getElementById('image-preview-container');
+      const previewImage = document.getElementById('image-preview');
+
+      input.value = '';
+      placeholder.style.display = 'block';
+    }
   </script>
 </body>
 </html>

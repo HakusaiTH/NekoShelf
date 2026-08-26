@@ -1,86 +1,119 @@
 // controllers/bookController.js
-// CONTROLLER: receives HTTP requests, talks to the Model,
-// then chooses which View to render (or redirects).
+// CONTROLLER: Handles HTTP requests for Books with relational author and category linkage
 
 const BookModel = require('../models/bookModel');
-
-const GENRES = [
-  'Fiction',
-  'Non-Fiction',
-  'Technology',
-  'Classic',
-  'Dystopian',
-  'Fantasy',
-  'Sci-Fi',
-  'Mystery',
-  'Romance',
-  'Biography',
-  'History',
-  'Other'
-];
+const AuthorModel = require('../models/authorModel');
+const CategoryModel = require('../models/categoryModel');
 
 const BookController = {
-  // GET / -> list all books
+  // GET /books -> list all books with optional search & category filter
   index: (req, res) => {
-    BookModel.getAll((err, books) => {
-      if (err) return res.status(500).send('Database error: ' + err.message);
-      res.render('index', { books, title: 'My Book Library', genres: GENRES });
+    const { search, category_id } = req.query;
+
+    CategoryModel.getAll((err, categories) => {
+      BookModel.getAll(search, category_id, (err, books) => {
+        if (err) return res.status(500).send('Database error: ' + err.message);
+        res.render('books/index', {
+          books: books || [],
+          categories: categories || [],
+          search: search || '',
+          selectedCategory: category_id || '',
+          title: 'Books Catalog',
+          activeTab: 'books'
+        });
+      });
     });
   },
 
-  // GET /books/add -> show the "add book" form
+  // GET /books/add -> show "add book" form with author & category dropdowns
   showAddForm: (req, res) => {
-    res.render('add', { title: 'Add a New Book', genres: GENRES, error: null, formData: {} });
+    AuthorModel.getAll((err, authors) => {
+      CategoryModel.getAll((err, categories) => {
+        res.render('books/add', {
+          title: 'Add a New Book',
+          activeTab: 'books',
+          authors: authors || [],
+          categories: categories || [],
+          error: null,
+          formData: {}
+        });
+      });
+    });
   },
 
-  // POST /books -> create a new book, then redirect to list
+  // POST /books -> create book
   create: (req, res) => {
-    if (req.uploadError) {
-      return res.status(400).render('add', {
-        title: 'Add a New Book',
-        genres: GENRES,
-        error: req.uploadError,
-        formData: req.body || {}
+    const { title, author_id, category_id, isbn, published_year, total_copies, description } = req.body || {};
+
+    const renderWithForm = (errorMessage) => {
+      AuthorModel.getAll((err, authors) => {
+        CategoryModel.getAll((err, categories) => {
+          res.status(400).render('books/add', {
+            title: 'Add a New Book',
+            activeTab: 'books',
+            authors: authors || [],
+            categories: categories || [],
+            error: errorMessage,
+            formData: req.body || {}
+          });
+        });
       });
+    };
+
+    if (req.uploadError) {
+      return renderWithForm(req.uploadError);
     }
 
-    const { title, author, genre, published_year, description } = req.body || {};
-
-    if (!title || !author || !title.trim() || !author.trim()) {
-      return res.status(400).render('add', {
-        title: 'Add a New Book',
-        genres: GENRES,
-        error: 'Title and Author are required.',
-        formData: req.body || {}
-      });
+    if (!title || !title.trim()) {
+      return renderWithForm('Book title is required.');
     }
 
     const cover_image = req.file ? '/uploads/' + req.file.filename : null;
+    const copies = parseInt(total_copies) || 1;
 
-    BookModel.create({ title, author, genre, published_year, cover_image, description }, (err) => {
-      if (err) {
-        return res.status(500).render('add', {
-          title: 'Add a New Book',
-          genres: GENRES,
-          error: 'Database error: ' + err.message,
-          formData: req.body || {}
-        });
+    BookModel.create(
+      {
+        title: title.trim(),
+        author_id: author_id || null,
+        category_id: category_id || null,
+        isbn: isbn ? isbn.trim() : null,
+        published_year: published_year || null,
+        total_copies: copies,
+        available_copies: copies,
+        cover_image,
+        description: description ? description.trim() : null
+      },
+      (err) => {
+        if (err) return renderWithForm('Database error: ' + err.message);
+        res.redirect('/books');
       }
-      res.redirect('/');
-    });
+    );
   },
 
-  // GET /books/:id/edit -> show the "edit book" form pre-filled
+  // GET /books/:id/edit -> pre-filled edit form
   showEditForm: (req, res) => {
     const { id } = req.params;
+
     BookModel.getById(id, (err, book) => {
       if (err) return res.status(500).send('Database error: ' + err.message);
       if (!book) return res.status(404).send('Book not found');
-      res.render('edit', { book, title: 'Edit Book', genres: GENRES, error: null });
+
+      AuthorModel.getAll((err, authors) => {
+        CategoryModel.getAll((err, categories) => {
+          res.render('books/edit', {
+            book,
+            title: 'Edit Book',
+            activeTab: 'books',
+            authors: authors || [],
+            categories: categories || [],
+            error: null
+          });
+        });
+      });
     });
   },
 
-  // GET /books/:id/json -> API endpoint for book details modal
+  // GET /books/:id/json -> API endpoint for modal
   getDetailJson: (req, res) => {
     const { id } = req.params;
     BookModel.getById(id, (err, book) => {
@@ -90,27 +123,43 @@ const BookController = {
     });
   },
 
-  // PUT /books/:id -> update an existing book
+  // PUT /books/:id -> update book
   update: (req, res) => {
     const { id } = req.params;
-    const { title, author, genre, published_year, description, existing_cover_image } = req.body || {};
+    const { title, author_id, category_id, isbn, published_year, total_copies, available_copies, description, existing_cover_image } = req.body || {};
+
+    const renderWithForm = (errorMessage) => {
+      AuthorModel.getAll((err, authors) => {
+        CategoryModel.getAll((err, categories) => {
+          res.status(400).render('books/edit', {
+            book: {
+              id,
+              title,
+              author_id,
+              category_id,
+              isbn,
+              published_year,
+              total_copies,
+              available_copies,
+              description,
+              cover_image: existing_cover_image
+            },
+            title: 'Edit Book',
+            activeTab: 'books',
+            authors: authors || [],
+            categories: categories || [],
+            error: errorMessage
+          });
+        });
+      });
+    };
 
     if (req.uploadError) {
-      return res.status(400).render('edit', {
-        book: { id, title, author, genre, published_year, description, cover_image: existing_cover_image },
-        title: 'Edit Book',
-        genres: GENRES,
-        error: req.uploadError
-      });
+      return renderWithForm(req.uploadError);
     }
 
-    if (!title || !author || !title.trim() || !author.trim()) {
-      return res.status(400).render('edit', {
-        book: { id, title, author, genre, published_year, description, cover_image: existing_cover_image },
-        title: 'Edit Book',
-        genres: GENRES,
-        error: 'Title and Author are required.'
-      });
+    if (!title || !title.trim()) {
+      return renderWithForm('Book title is required.');
     }
 
     let cover_image;
@@ -120,27 +169,34 @@ const BookController = {
       cover_image = existing_cover_image;
     }
 
-    BookModel.update(id, { title, author, genre, published_year, cover_image, description }, (err) => {
-      if (err) {
-        return res.status(500).render('edit', {
-          book: { id, title, author, genre, published_year, description, cover_image: existing_cover_image },
-          title: 'Edit Book',
-          genres: GENRES,
-          error: 'Database error: ' + err.message
-        });
+    BookModel.update(
+      id,
+      {
+        title: title.trim(),
+        author_id: author_id || null,
+        category_id: category_id || null,
+        isbn: isbn ? isbn.trim() : null,
+        published_year: published_year || null,
+        total_copies: parseInt(total_copies) || 1,
+        available_copies: parseInt(available_copies) || 1,
+        cover_image,
+        description: description ? description.trim() : null
+      },
+      (err) => {
+        if (err) return renderWithForm('Database error: ' + err.message);
+        res.redirect('/books');
       }
-      res.redirect('/');
-    });
+    );
   },
 
-  // DELETE /books/:id -> remove a book
+  // DELETE /books/:id -> remove book
   destroy: (req, res) => {
     const { id } = req.params;
     BookModel.delete(id, (err) => {
       if (err) return res.status(500).send('Database error: ' + err.message);
-      res.redirect('/');
+      res.redirect('/books');
     });
-  },
+  }
 };
 
 module.exports = BookController;

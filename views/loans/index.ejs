@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %> - LibHub System</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <%- include('../partials/header') %>
+
+  <main class="main-content">
+    <div class="container">
+      
+      <div class="page-header flex-between">
+        <div>
+          <h1 class="page-title">Loans & Borrowing Log</h1>
+          <p class="page-subtitle">Track active book checkouts, manage due dates, and process book returns.</p>
+        </div>
+        <a href="/loans/add" class="btn btn-primary">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+          Issue New Loan
+        </a>
+      </div>
+
+      <!-- Filter Tabs -->
+      <div class="card toolbar-card mb-4">
+        <div class="tab-filters">
+          <a href="/loans" class="tab-filter-btn <%= !selectedStatus ? 'active' : '' %>">All Transactions</a>
+          <a href="/loans?status=borrowed" class="tab-filter-btn <%= selectedStatus === 'borrowed' ? 'active' : '' %>">Active Loans</a>
+          <a href="/loans?status=overdue" class="tab-filter-btn <%= selectedStatus === 'overdue' ? 'active' : '' %>">Overdue Warnings</a>
+          <a href="/loans?status=returned" class="tab-filter-btn <%= selectedStatus === 'returned' ? 'active' : '' %>">Returned Log</a>
+        </div>
+      </div>
+
+      <div class="card shadow-sm">
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Loan ID</th>
+                <th>Book Title</th>
+                <th>Borrower Member</th>
+                <th>Borrow Date</th>
+                <th>Due Date</th>
+                <th>Return Date</th>
+                <th>Status</th>
+                <th class="text-right">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if (loans && loans.length > 0) { %>
+                <% loans.forEach(loan => { %>
+                  <tr>
+                    <td><span class="badge badge-secondary font-mono">#LN-<%= loan.id %></span></td>
+                    <td class="font-semibold text-lg"><%= loan.book_title %></td>
+                    <td>
+                      <div><strong><%= loan.member_name %></strong></div>
+                      <span class="text-sm text-muted"><%= loan.member_code %></span>
+                    </td>
+                    <td><%= loan.borrow_date %></td>
+                    <td>
+                      <span class="<%= loan.status === 'overdue' ? 'text-rose font-bold' : '' %>">
+                        <%= loan.due_date %>
+                      </span>
+                    </td>
+                    <td><%= loan.return_date || '-' %></td>
+                    <td>
+                      <span class="badge badge-<%= loan.status === 'returned' ? 'success' : (loan.status === 'overdue' ? 'danger' : 'warning') %>">
+                        <%= loan.status.toUpperCase() %>
+                      </span>
+                    </td>
+                    <td class="text-right">
+                      <% if (loan.status !== 'returned') { %>
+                        <form action="/loans/<%= loan.id %>/return" method="POST" style="display:inline;">
+                          <button type="submit" class="btn btn-xs btn-success">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                            Mark Returned
+                          </button>
+                        </form>
+                      <% } else { %>
+                        <span class="text-muted text-sm font-medium">Completed</span>
+                      <% } %>
+                    </td>
+                  </tr>
+                <% }) %>
+              <% } else { %>
+                <tr>
+                  <td colspan="8" class="empty-text">No loan transactions matching filter.</td>
+                </tr>
+              <% } %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <%- include('../partials/footer') %>
+</body>
+</html>

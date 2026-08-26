@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %> - LibHub System</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <%- include('../partials/header') %>
+
+  <main class="main-content">
+    <div class="container">
+      
+      <div class="page-header flex-between">
+        <div>
+          <h1 class="page-title">Authors Management</h1>
+          <p class="page-subtitle">Manage authors and view their published books in the library.</p>
+        </div>
+        <a href="/authors/add" class="btn btn-primary">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+          Add New Author
+        </a>
+      </div>
+
+      <div class="card shadow-sm">
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Author Name</th>
+                <th>Biography / Notes</th>
+                <th>Books Count</th>
+                <th class="text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if (authors && authors.length > 0) { %>
+                <% authors.forEach(author => { %>
+                  <tr>
+                    <td class="font-medium flex-align-center gap-2">
+                      <div class="avatar-circle"><%= author.name.charAt(0).toUpperCase() %></div>
+                      <div>
+                        <div class="font-semibold text-lg"><%= author.name %></div>
+                      </div>
+                    </td>
+                    <td><%= author.bio || 'No bio provided.' %></td>
+                    <td>
+                      <a href="/books?search=<%= encodeURIComponent(author.name) %>" class="badge badge-info text-decoration-none">
+                        <%= author.book_count || 0 %> Books
+                      </a>
+                    </td>
+                    <td class="text-right">
+                      <a href="/authors/<%= author.id %>/edit" class="btn btn-xs btn-outline-primary">Edit</a>
+                      <form action="/authors/<%= author.id %>?_method=DELETE" method="POST" onsubmit="return confirm('Deleting an author will dissociate them from their books. Continue?');" style="display:inline;">
+                        <button type="submit" class="btn btn-xs btn-outline-danger">Delete</button>
+                      </form>
+                    </td>
+                  </tr>
+                <% }) %>
+              <% } else { %>
+                <tr>
+                  <td colspan="4" class="empty-text">No authors added yet.</td>
+                </tr>
+              <% } %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <%- include('../partials/footer') %>
+</body>
+</html>

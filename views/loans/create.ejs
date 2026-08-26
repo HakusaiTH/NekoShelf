@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %> - LibHub System</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <%- include('../partials/header') %>
+
+  <main class="main-content">
+    <div class="container form-container">
+      <div class="card form-card">
+        <div class="card-header border-bottom flex-between">
+          <div>
+            <h1 class="card-title">Issue New Book Loan (Checkout)</h1>
+            <p class="card-subtitle">Select borrower member, book title, and loan duration.</p>
+          </div>
+          <a href="/loans" class="btn btn-ghost">&larr; Back to Loans</a>
+        </div>
+
+        <% if (error) { %>
+          <div class="alert alert-danger">
+            <span><%= error %></span>
+          </div>
+        <% } %>
+
+        <form action="/loans" method="POST" class="app-form">
+          <div class="form-grid">
+
+            <div class="form-group col-span-2">
+              <label for="book_id" class="form-label">Select Book Title <span class="required">*</span></label>
+              <select id="book_id" name="book_id" class="form-control" required>
+                <option value="">-- Choose Available Book --</option>
+                <% books.forEach(book => { %>
+                  <option value="<%= book.id %>">
+                    <%= book.title %> (by <%= book.author_name || 'Unknown' %>) - <%= book.available_copies %> copy(ies) left
+                  </option>
+                <% }) %>
+              </select>
+            </div>
+
+            <div class="form-group col-span-2">
+              <label for="member_id" class="form-label">Select Borrower Member <span class="required">*</span></label>
+              <select id="member_id" name="member_id" class="form-control" required>
+                <option value="">-- Choose Member --</option>
+                <% members.forEach(mem => { %>
+                  <option value="<%= mem.id %>">
+                    <%= mem.name %> (<%= mem.member_code %>) <%= mem.email ? '- ' + mem.email : '' %>
+                  </option>
+                <% }) %>
+              </select>
+            </div>
+
+            <div class="form-group col-span-2">
+              <label for="due_days" class="form-label">Loan Duration (Days)</label>
+              <select id="due_days" name="due_days" class="form-control">
+                <option value="7">7 Days (1 Week)</option>
+                <option value="14" selected>14 Days (2 Weeks)</option>
+                <option value="30">30 Days (1 Month)</option>
+              </select>
+            </div>
+
+          </div>
+
+          <div class="form-actions mt-4">
+            <button type="submit" class="btn btn-primary btn-lg">Confirm & Issue Checkout</button>
+            <a href="/loans" class="btn btn-ghost">Cancel</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <%- include('../partials/footer') %>
+</body>
+</html>

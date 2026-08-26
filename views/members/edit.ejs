@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %> - LibHub System</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <%- include('../partials/header') %>
+
+  <main class="main-content">
+    <div class="container form-container">
+      <div class="card form-card">
+        <div class="card-header border-bottom flex-between">
+          <div>
+            <h1 class="card-title">Edit Member: <%= member.name %></h1>
+            <p class="card-subtitle">Update contact details or member code.</p>
+          </div>
+          <a href="/members" class="btn btn-ghost">&larr; Back to Members</a>
+        </div>
+
+        <% if (error) { %>
+          <div class="alert alert-danger">
+            <span><%= error %></span>
+          </div>
+        <% } %>
+
+        <form action="/members/<%= member.id %>?_method=PUT" method="POST" class="app-form">
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="name" class="form-label">Full Name <span class="required">*</span></label>
+              <input type="text" id="name" name="name" required value="<%= member.name %>" class="form-control">
+            </div>
+
+            <div class="form-group">
+              <label for="member_code" class="form-label">Member Code <span class="required">*</span></label>
+              <input type="text" id="member_code" name="member_code" required value="<%= member.member_code %>" class="form-control">
+            </div>
+
+            <div class="form-group">
+              <label for="email" class="form-label">Email Address</label>
+              <input type="email" id="email" name="email" value="<%= member.email || '' %>" class="form-control">
+            </div>
+
+            <div class="form-group">
+              <label for="phone" class="form-label">Phone Number</label>
+              <input type="text" id="phone" name="phone" value="<%= member.phone || '' %>" class="form-control">
+            </div>
+          </div>
+
+          <div class="form-actions mt-4">
+            <button type="submit" class="btn btn-primary btn-lg">Update Member</button>
+            <a href="/members" class="btn btn-ghost">Cancel</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <%- include('../partials/footer') %>
+</body>
+</html>

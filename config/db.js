@@ -90,6 +90,19 @@ db.serialize(() => {
     )
   `);
 
+  // 6. USERS TABLE
+  db.run(`
+    CREATE TABLE IF NOT EXISTS users (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      username TEXT UNIQUE NOT NULL,
+      email TEXT UNIQUE NOT NULL,
+      password TEXT NOT NULL,
+      role TEXT NOT NULL DEFAULT 'user',
+      name TEXT,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+
   // Migration check for books table columns if existing database had old structure
   db.all("PRAGMA table_info(books)", (err, columns) => {
     if (!err && columns) {
@@ -109,6 +122,21 @@ db.serialize(() => {
       if (!colNames.includes('available_copies')) {
         db.run("ALTER TABLE books ADD COLUMN available_copies INTEGER DEFAULT 1");
       }
+    }
+  });
+
+  // Seed Users if Users table is empty
+  const bcrypt = require('bcryptjs');
+  db.get('SELECT COUNT(*) as count FROM users', [], (err, row) => {
+    if (!err && row && row.count === 0) {
+      console.log('Seeding initial admin and user accounts...');
+      const adminPassHash = bcrypt.hashSync('admin123', 10);
+      const userPassHash = bcrypt.hashSync('user123', 10);
+
+      const userStmt = db.prepare('INSERT INTO users (username, email, password, role, name) VALUES (?, ?, ?, ?, ?)');
+      userStmt.run('admin', 'admin@library.com', adminPassHash, 'admin', 'System Administrator');
+      userStmt.run('user', 'user@library.com', userPassHash, 'user', 'Regular Member');
+      userStmt.finalize();
     }
   });
 

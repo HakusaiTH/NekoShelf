@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %> - LibHub System</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body class="form-page">
+  <%- include('../partials/header') %>
+
+  <main class="main-content">
+    <div class="form-shell">
+      <div class="form-card auth-card">
+        <div class="form-heading">
+          <div class="form-heading-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+              <circle cx="8.5" cy="7" r="4"/>
+              <line x1="20" y1="8" x2="20" y2="14"/>
+              <line x1="17" y1="11" x2="23" y2="11"/>
+            </svg>
+          </div>
+          <div>
+            <span class="form-eyebrow">New Registration</span>
+            <h1>Create Account</h1>
+            <p class="form-intro">Join LibHub to explore books, track loans, and manage library resources.</p>
+          </div>
+        </div>
+
+        <% if (typeof error !== 'undefined' && error) { %>
+          <div class="form-alert-error">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <span><%= error %></span>
+          </div>
+        <% } %>
+
+        <form action="/auth/register" method="POST" class="form">
+          <div class="form-grid">
+            <div class="form-field col-span-2">
+              <label for="name">Full Name</label>
+              <div class="input-wrap">
+                <svg class="svg-icon" width="18" height="18" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                <input type="text" id="name" name="name" placeholder="e.g. John Doe" value="<%= formData.name || '' %>">
+              </div>
+            </div>
+
+            <div class="form-field">
+              <label for="username">Username <span class="required">*</span></label>
+              <div class="input-wrap">
+                <svg class="svg-icon" width="18" height="18" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M16 8v5a3 3 0 0 0 6 0v-1a10 10 0 1 0-3.92 7.94"/></svg>
+                <input type="text" id="username" name="username" required placeholder="Choose a username..." value="<%= formData.username || '' %>">
+              </div>
+            </div>
+
+            <div class="form-field">
+              <label for="email">Email Address <span class="required">*</span></label>
+              <div class="input-wrap">
+                <svg class="svg-icon" width="18" height="18" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                <input type="email" id="email" name="email" required placeholder="name@example.com" value="<%= formData.email || '' %>">
+              </div>
+            </div>
+
+            <div class="form-field">
+              <label for="password">Password <span class="required">*</span></label>
+              <div class="input-wrap">
+                <svg class="svg-icon" width="18" height="18" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                <input type="password" id="password" name="password" required placeholder="Enter strong password...">
+              </div>
+            </div>
+
+            <div class="form-field">
+              <label for="confirmPassword">Confirm Password <span class="required">*</span></label>
+              <div class="input-wrap">
+                <svg class="svg-icon" width="18" height="18" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                <input type="password" id="confirmPassword" name="confirmPassword" required placeholder="Re-enter password...">
+              </div>
+            </div>
+
+            <div class="form-field col-span-2">
+              <label for="role">Account Role Permission</label>
+              <div class="input-wrap">
+                <svg class="svg-icon" width="18" height="18" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                <select id="role" name="role" class="select-input">
+                  <option value="user" <%= formData.role === 'user' ? 'selected' : '' %>>👤 Regular User (Read-Only Catalog Access)</option>
+                  <option value="admin" <%= formData.role === 'admin' ? 'selected' : '' %>>🔑 Administrator (Full Create/Edit/Delete Access)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <a href="/auth/login" class="btn btn-ghost">Already have an account? Sign In</a>
+            <button type="submit" class="btn btn-primary">Register Account &rarr;</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

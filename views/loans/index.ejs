@@ -20,10 +20,12 @@
           <h1 class="page-title">Loans & Borrowing Log</h1>
           <p class="page-subtitle">Track active book checkouts, manage due dates, and process book returns.</p>
         </div>
-        <a href="/loans/add" class="btn btn-primary">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
-          Issue New Loan
-        </a>
+        <% if (typeof isAdmin !== 'undefined' && isAdmin) { %>
+          <a href="/loans/add" class="btn btn-primary">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+            Issue New Loan
+          </a>
+        <% } %>
       </div>
 
       <!-- Filter Tabs -->
@@ -75,12 +77,16 @@
                     </td>
                     <td class="text-right">
                       <% if (loan.status !== 'returned') { %>
-                        <form action="/loans/<%= loan.id %>/return" method="POST" style="display:inline;">
-                          <button type="submit" class="btn btn-xs btn-success">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-                            Mark Returned
-                          </button>
-                        </form>
+                        <% if (typeof isAdmin !== 'undefined' && isAdmin) { %>
+                          <form action="/loans/<%= loan.id %>/return" method="POST" style="display:inline;">
+                            <button type="submit" class="btn btn-xs btn-success">
+                              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                              Mark Returned
+                            </button>
+                          </form>
+                        <% } else { %>
+                          <span class="badge badge-warning">Borrowed</span>
+                        <% } %>
                       <% } else { %>
                         <span class="text-muted text-sm font-medium">Completed</span>
                       <% } %>

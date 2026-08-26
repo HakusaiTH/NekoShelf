@@ -20,10 +20,12 @@
           <h1 class="page-title">Authors Management</h1>
           <p class="page-subtitle">Manage authors and view their published books in the library.</p>
         </div>
-        <a href="/authors/add" class="btn btn-primary">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
-          Add New Author
-        </a>
+        <% if (typeof isAdmin !== 'undefined' && isAdmin) { %>
+          <a href="/authors/add" class="btn btn-primary">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+            Add New Author
+          </a>
+        <% } %>
       </div>
 
       <div class="card shadow-sm">
@@ -34,7 +36,9 @@
                 <th>Author Name</th>
                 <th>Biography / Notes</th>
                 <th>Books Count</th>
-                <th class="text-right">Actions</th>
+                <% if (typeof isAdmin !== 'undefined' && isAdmin) { %>
+                  <th class="text-right">Actions</th>
+                <% } %>
               </tr>
             </thead>
             <tbody>
@@ -53,12 +57,14 @@
                         <%= author.book_count || 0 %> Books
                       </a>
                     </td>
-                    <td class="text-right">
-                      <a href="/authors/<%= author.id %>/edit" class="btn btn-xs btn-outline-primary">Edit</a>
-                      <form action="/authors/<%= author.id %>?_method=DELETE" method="POST" onsubmit="return confirm('Deleting an author will dissociate them from their books. Continue?');" style="display:inline;">
-                        <button type="submit" class="btn btn-xs btn-outline-danger">Delete</button>
-                      </form>
-                    </td>
+                    <% if (typeof isAdmin !== 'undefined' && isAdmin) { %>
+                      <td class="text-right">
+                        <a href="/authors/<%= author.id %>/edit" class="btn btn-xs btn-outline-primary">Edit</a>
+                        <form action="/authors/<%= author.id %>?_method=DELETE" method="POST" onsubmit="return confirm('Deleting an author will dissociate them from their books. Continue?');" style="display:inline;">
+                          <button type="submit" class="btn btn-xs btn-outline-danger">Delete</button>
+                        </form>
+                      </td>
+                    <% } %>
                   </tr>
                 <% }) %>
               <% } else { %>

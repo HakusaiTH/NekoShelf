@@ -20,10 +20,12 @@
           <h1 class="page-title">Categories & Genres</h1>
           <p class="page-subtitle">Organize your book collection into relational genres.</p>
         </div>
-        <a href="/categories/add" class="btn btn-primary">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
-          Add New Category
-        </a>
+        <% if (typeof isAdmin !== 'undefined' && isAdmin) { %>
+          <a href="/categories/add" class="btn btn-primary">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+            Add New Category
+          </a>
+        <% } %>
       </div>
 
       <div class="card shadow-sm">
@@ -34,7 +36,9 @@
                 <th>Category Name</th>
                 <th>Description</th>
                 <th>Books Count</th>
-                <th class="text-right">Actions</th>
+                <% if (typeof isAdmin !== 'undefined' && isAdmin) { %>
+                  <th class="text-right">Actions</th>
+                <% } %>
               </tr>
             </thead>
             <tbody>
@@ -48,12 +52,14 @@
                         <%= cat.book_count || 0 %> Books
                       </a>
                     </td>
-                    <td class="text-right">
-                      <a href="/categories/<%= cat.id %>/edit" class="btn btn-xs btn-outline-primary">Edit</a>
-                      <form action="/categories/<%= cat.id %>?_method=DELETE" method="POST" onsubmit="return confirm('Deleting a category will unassign books in this genre. Continue?');" style="display:inline;">
-                        <button type="submit" class="btn btn-xs btn-outline-danger">Delete</button>
-                      </form>
-                    </td>
+                    <% if (typeof isAdmin !== 'undefined' && isAdmin) { %>
+                      <td class="text-right">
+                        <a href="/categories/<%= cat.id %>/edit" class="btn btn-xs btn-outline-primary">Edit</a>
+                        <form action="/categories/<%= cat.id %>?_method=DELETE" method="POST" onsubmit="return confirm('Deleting a category will unassign books in this genre. Continue?');" style="display:inline;">
+                          <button type="submit" class="btn btn-xs btn-outline-danger">Delete</button>
+                        </form>
+                      </td>
+                    <% } %>
                   </tr>
                 <% }) %>
               <% } else { %>

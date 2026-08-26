@@ -688,6 +688,12 @@ h1, h2, h3, h4, h5, h6, .brand-title, .page-title, .hero-header h1, .form-headin
   box-shadow: var(--shadow-md);
 }
 
+.auth-card {
+  width: min(100%, 520px) !important;
+  max-width: 520px !important;
+  margin: 0 auto;
+}
+
 .form-heading {
   display: flex;
   align-items: flex-start;
@@ -1271,13 +1277,14 @@ h1, h2, h3, h4, h5, h6, .brand-title, .page-title, .hero-header h1, .form-headin
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  margin: 0;
-  width: min(94vw, 1000px);
-  height: min(88vh, 780px);
+  margin: auto;
+  width: min(90vw, 680px);
+  height: auto;
+  max-height: 85vh;
   padding: 0;
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius-lg);
-  box-shadow: var(--shadow-lg);
+  box-shadow: 0 16px 40px rgba(28, 25, 23, 0.25);
   background: var(--bg-card);
   overflow: hidden;
   color: var(--text-main);
@@ -1321,14 +1328,14 @@ h1, h2, h3, h4, h5, h6, .brand-title, .page-title, .hero-header h1, .form-headin
 
 .modal-book-grid {
   display: grid;
-  grid-template-columns: 280px 1fr;
-  gap: 2.25rem;
+  grid-template-columns: 220px 1fr;
+  gap: 1.75rem;
   align-items: start;
 }
 
 .modal-cover-card {
   width: 100%;
-  max-width: 280px;
+  max-width: 220px;
   border-radius: 12px;
   overflow: hidden;
   box-shadow: var(--shadow-md);
@@ -1337,7 +1344,7 @@ h1, h2, h3, h4, h5, h6, .brand-title, .page-title, .hero-header h1, .form-headin
 }
 
 .modal-cover-placeholder-card {
-  height: 360px;
+  height: 290px;
   background: var(--primary);
   display: flex;
   align-items: center;

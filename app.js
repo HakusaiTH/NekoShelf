@@ -1,11 +1,14 @@
 // app.js
-// Entry point. Wires together Express, EJS view engine, static files, middleware, and routes.
+// Entry point. Wires together Express, EJS view engine, session authentication, static files, middleware, and routes.
 
 const express = require('express');
 const path = require('path');
 const methodOverride = require('method-override');
+const session = require('express-session');
+const { attachUser } = require('./middleware/authMiddleware');
 
 // Import Route Modules
+const authRoutes = require('./routes/authRoutes');
 const dashboardRoutes = require('./routes/dashboardRoutes');
 const bookRoutes = require('./routes/bookRoutes');
 const authorRoutes = require('./routes/authorRoutes');
@@ -26,7 +29,19 @@ app.use(express.json());
 app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Register Relational Routes
+// Session Configuration
+app.use(session({
+  secret: 'mvc-book-library-secret-key-2026',
+  resave: false,
+  saveUninitialized: false,
+  cookie: { maxAge: 24 * 60 * 60 * 1000 } // 24 hours
+}));
+
+// Attach User Context & Roles to res.locals for all EJS Views
+app.use(attachUser);
+
+// Register Relational & Auth Routes
+app.use('/auth', authRoutes);
 app.use('/', dashboardRoutes);
 app.use('/books', bookRoutes);
 app.use('/authors', authorRoutes);

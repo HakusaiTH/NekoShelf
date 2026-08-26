@@ -51,8 +51,20 @@ CREATE TABLE IF NOT EXISTS loans (
     borrow_date DATE DEFAULT (DATE('now')),
     due_date DATE NOT NULL,
     return_date DATE,
-    status TEXT DEFAULT 'borrowed', -- Options: 'borrowed', 'returned', 'overdue'
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (book_id) REFERENCES books(id) ON DELETE CASCADE,
     FOREIGN KEY (member_id) REFERENCES members(id) ON DELETE CASCADE
 );
+
+-- 6. USERS TABLE (Authentication & Role Management)
+CREATE TABLE IF NOT EXISTS users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username TEXT UNIQUE NOT NULL,
+    email TEXT UNIQUE NOT NULL,
+    password TEXT NOT NULL,
+    role TEXT NOT NULL DEFAULT 'user', -- Options: 'admin', 'user'
+    name TEXT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+

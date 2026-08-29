@@ -1,5 +1,0 @@
-node_modules/
-public/uploads/*
-!public/uploads/.gitkeep
-scratch/
-database/library.db

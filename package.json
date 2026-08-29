@@ -1,19 +1,25 @@
 {
-  "name": "mvc-book-library",
-  "version": "1.0.0",
-  "description": "Simple MVC exercise: Express (Controller) + EJS (View) + SQLite (Model)",
-  "main": "app.js",
+  "name": "reactapp",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
   "scripts": {
-    "start": "node app.js",
-    "dev": "node app.js"
+    "dev": "vite",
+    "build": "vite build",
+    "lint": "eslint .",
+    "preview": "vite preview"
   },
   "dependencies": {
-    "bcryptjs": "^3.0.3",
-    "ejs": "^3.1.10",
-    "express": "^4.19.2",
-    "express-session": "^1.19.0",
-    "method-override": "^3.0.0",
-    "multer": "^2.2.0",
-    "sqlite3": "^5.1.7"
+    "@supabase/supabase-js": "^2.49.1",
+    "lucide-react": "^0.475.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-router-dom": "^7.2.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.0.9",
+    "@vitejs/plugin-react": "^4.3.4",
+    "tailwindcss": "^4.0.9",
+    "vite": "^6.2.0"
   }
 }

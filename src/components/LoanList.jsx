@@ -39,6 +39,16 @@ export default function LoanList({
     due_date: defaultDueDate()
   });
 
+  React.useEffect(() => {
+    if (isOpenLoanModal) {
+      setFormData((prev) => ({
+        ...prev,
+        book_id: preselectedBook ? String(preselectedBook.id) : prev.book_id || '',
+        due_date: prev.due_date || defaultDueDate()
+      }));
+    }
+  }, [isOpenLoanModal, preselectedBook]);
+
   const today = new Date().toISOString().split('T')[0];
 
   const filteredLoans = loans.filter((loan) => {

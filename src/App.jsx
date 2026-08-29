@@ -227,7 +227,7 @@ function AppContent() {
 
       const { data: loansData, error: loansErr } = await supabase
         .from('loans')
-        .select(`*, books(title, authors(name)), members(name, member_code)`)
+        .select(`*, books(*, authors(name)), members(*)`)
         .order('id', { ascending: false });
 
       const hasError = booksErr || authorsErr || categoriesErr || membersErr || loansErr;
@@ -610,15 +610,87 @@ function AppContent() {
     if (action === 'newLoan') {
       setPreselectedBookForLoan(null);
       setIsLoanModalOpen(true);
+      navigate('/loans');
     } else if (action === 'addBook') {
       setEditingBook(null);
       setIsBookModalOpen(true);
     }
   };
 
-  const handleBorrowBookDirect = (book) => {
-    setPreselectedBookForLoan(book);
-    setIsLoanModalOpen(true);
+  const handleBorrowBookDirect = async (book) => {
+    if (!book || book.available_copies <= 0) {
+      showToast('This book has no available copies left.', 'error');
+      return;
+    }
+
+    if (!user) {
+      showToast('Please sign in to borrow books.', 'error');
+      setAuthMode('signin');
+      setIsAuthModalOpen(true);
+      return;
+    }
+
+    // If user is Admin, navigate to /loans and open issue loan modal pre-filled
+    if (user.role === 'admin') {
+      setPreselectedBookForLoan(book);
+      setIsLoanModalOpen(true);
+      navigate('/loans');
+      return;
+    }
+
+    // If user is Reader (user role): Perform instant direct checkout
+    let targetMember = members.find(
+      (m) => (user.email && m.email === user.email) || (user.name && m.name === user.name)
+    );
+
+    const today = new Date().toISOString().split('T')[0];
+    const dueDate = new Date();
+    dueDate.setDate(dueDate.getDate() + 14);
+    const dueDateStr = dueDate.toISOString().split('T')[0];
+
+    if (!targetMember) {
+      const newMemberCode = `MEM${String(members.length + 1).padStart(3, '0')}`;
+      const newMemberData = {
+        member_code: newMemberCode,
+        name: user.name || 'Reader Member',
+        email: user.email || 'user@nekoshelf.com',
+        phone: '+66 81-234-5678'
+      };
+
+      if (dbStatus.hasTables && !dbStatus.isRlsBlocked) {
+        try {
+          const { data: createdMember, error: memErr } = await supabase
+            .from('members')
+            .insert([newMemberData])
+            .select()
+            .single();
+          if (!memErr && createdMember) {
+            targetMember = createdMember;
+            setMembers((prev) => [...prev, createdMember]);
+          }
+        } catch (e) {
+          // Fallback to local
+        }
+      }
+
+      if (!targetMember) {
+        targetMember = {
+          id: members.length > 0 ? Math.max(...members.map((m) => m.id)) + 1 : 1,
+          ...newMemberData
+        };
+        setMembers((prev) => [...prev, targetMember]);
+      }
+    }
+
+    const loanData = {
+      book_id: book.id,
+      member_id: targetMember.id,
+      borrow_date: today,
+      due_date: dueDateStr
+    };
+
+    await handleAddLoan(loanData);
+    showToast(`Successfully borrowed "${book.title}"! Check 'My Borrowed Books'.`);
   };
 
   const userRole = user?.role || 'admin';
@@ -673,6 +745,7 @@ function AppContent() {
                     user={user}
                     books={books}
                     loans={loans}
+                    members={members}
                     categories={categories}
                     setActiveTab={handleTabChange}
                     onBorrowBook={handleBorrowBookDirect}

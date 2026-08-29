@@ -12,6 +12,7 @@ export default function UserDashboard({
   user,
   books = [],
   loans = [],
+  members = [],
   categories = [],
   setActiveTab,
   onBorrowBook,
@@ -19,7 +20,22 @@ export default function UserDashboard({
 }) {
   const userName = user?.name || 'Reader';
 
-  const myActiveLoans = loans.filter((l) => !l.return_date);
+  // Find member record matching current logged in user
+  const currentMember = members.find(
+    (m) => (user?.email && m.email === user.email) || (user?.name && m.name === user.name)
+  );
+
+  const myActiveLoans = loans.filter((l) => {
+    if (l.return_date) return false;
+    if (currentMember) {
+      return String(l.member_id) === String(currentMember.id);
+    }
+    if (l.members) {
+      return (user?.email && l.members.email === user.email) || (user?.name && l.members.name === user.name);
+    }
+    return true;
+  });
+
   const today = new Date().toISOString().split('T')[0];
 
   return (
@@ -151,6 +167,11 @@ export default function UserDashboard({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {myActiveLoans.map((loan) => {
               const isOverdue = loan.due_date && loan.due_date < today;
+              const bookObj = books.find((b) => String(b.id) === String(loan.book_id)) || loan.books || {};
+              const bookTitle = bookObj.title || loan.books?.title || `Book #${loan.book_id}`;
+              const bookCover = bookObj.cover_image || loan.books?.cover_image || 'https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?auto=format&fit=crop&w=150&q=80';
+              const authorName = bookObj.authors?.name || loan.books?.authors?.name || '';
+
               return (
                 <div
                   key={loan.id}
@@ -158,16 +179,16 @@ export default function UserDashboard({
                 >
                   <div className="flex items-center space-x-3 min-w-0">
                     <img
-                      src={loan.books?.cover_image || 'https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?auto=format&fit=crop&w=150&q=80'}
-                      alt="Cover"
+                      src={bookCover}
+                      alt={bookTitle}
                       className="w-12 h-16 object-cover rounded-xl shrink-0 shadow-sm"
                     />
                     <div className="min-w-0">
                       <div className="text-sm font-extrabold text-slate-900 truncate">
-                        {loan.books?.title || `Book #${loan.book_id}`}
+                        {bookTitle}
                       </div>
                       <div className="text-xs text-slate-700 font-semibold">
-                        {loan.books?.authors?.name || ''}
+                        {authorName}
                       </div>
                       <div className="mt-1 text-[11px] font-mono flex items-center space-x-2">
                         <span className="text-slate-600 font-bold">Due: <strong className="text-slate-900 font-extrabold">{loan.due_date}</strong></span>

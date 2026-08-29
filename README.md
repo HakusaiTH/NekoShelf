@@ -1,50 +1,72 @@
 # 🐱 NekoShelf - Library & Manga Management System
 
-![NekoShelf Banner](public/logo.png)
+![NekoShelf Banner](public/NekoShelf.jpg)
 
-**NekoShelf** คือระบบบริหารจัดการห้องสมุดและคลังมังงะ/หนังสือแบบ Modern Web Application ที่พัฒนาด้วย **React 19**, **Vite**, **Tailwind CSS v4** ร่วมกับ **Supabase Cloud PostgreSQL Database** และ **Firebase Hosting**
+> A modern web application for managing libraries, books, and manga collections.
 
-ระบบถูกออกแบบมาเพื่อรองรับทั้งบทบาท **บรรณารักษ์ (Librarian / Admin)** ในการบริหารจัดการคลังหนังสือ สมาชิก และรายการยืม-คืน รวมถึงบทบาท **สมาชิก/ผู้อ่าน (Member / Reader)** ในการค้นหาและสำรวจคลังมังงะและหนังสือ
+**NekoShelf** is a modern web-based **Library and Manga Management System** built with **React 19**, **Vite**, and **Tailwind CSS v4**. The application uses **Supabase Cloud PostgreSQL** for database management and **Firebase Hosting** for deployment.
 
----
-
-## 🌟 ฟีเจอร์หลักของระบบ (Key Features)
-
-### 1. 📚 ระบบจัดการคลังหนังสือและมังงะ (Book & Manga Catalog)
-- **การค้นหาและกรอง (Search & Filter):** ค้นหาหนังสืออย่างรวดเร็วด้วยชื่อเรื่อง, ชื่อผู้แต่ง (Author), หมวดหมู่ (Category) หรือรหัส ISBN
-- **การติดตามจำนวนคงเหลือ (Stock Management):** คำนวณจำนวนเล่มทั้งหมด (`total_copies`) และจำนวนคงเหลือที่พร้อมให้ยืม (`available_copies`) แบบเรียลไทม์
-- **หน้ารายละเอียดหนังสือ (Book Detail View):** แสดงภาพปกหนังสือ, เรื่องย่อ, ปีที่พิมพ์, รหัส ISBN, ข้อมูลผู้แต่ง และสถานะพร้อมยืม
-
-### 2. 🔄 ระบบยืม - คืนหนังสือ (Loans & Borrowing Management)
-- **การออกรายการยืมใหม่ (Issue Loan):** บันทึกการยืมหนังสือระบุสมาชิก วันที่ยืม และกำหนดวันคืน (`due_date`)
-- **การรับคืนหนังสือ (Return Book):** กดรับคืนหนังสือ พร้อมปรับเพิ่มจำนวนหนังสือคงเหลือ (`available_copies`) ในระบบอัตโนมัติ
-- **ระบบแจ้งเตือนเกินกำหนด (Overdue Tracker):** ตรวจสอบและแสดงสถานะรายการยืมที่เกินกำหนดคืน (Overdue) ด้วยป้ายสีเตือนชัดเจน
-
-### 3. 👥 ระบบจัดการสมาชิก (Members Directory)
-- **ข้อมูลสมาชิก:** จัดเก็บรหัสสมาชิก (`member_code`), ชื่อ-นามสกุล, อีเมล และเบอร์โทรศัพท์
-- **ติดตามประวัติการยืม:** ตรวจสอบจำนวนรายการยืมที่กำลังดำเนินการอยู่ของสมาชิกแต่ละคน
-
-### 4. ✍️ ระบบจัดการนักเขียนและหมวดหมู่ (Authors & Categories Manager)
-- **Authors Manager:** จัดเก็บรายชื่อนักเขียน/ผู้วาดภาพประกอบ ประวัติสังเขป (Bio) และภาพโปรไฟล์ (เช่น Eiichiro Oda, Koyoharu Gotouge, Hajime Isayama)
-- **Categories Manager:** จัดหมวดหมู่หนังสือและมังงะ เช่น มังงะญี่ปุ่น (Manga), การ์ตูนแอ็กชัน (Shonen Action), แฟนตาซี (Fantasy)
-
-### 5. 📊 แดชบอร์ดสรุปผลภาพรวม (Interactive Analytics Dashboard)
-- **สถิติสำคัญ:** แสดงยอดรวมหนังสือ สมาชิก รายการยืมที่กำลังดำเนินการ และรายการคืนเกินกำหนด
-- **หนังสือยอดนิยม (Popular Books):** แสดงรายการหนังสือที่มีสถิติถูกยืมมากที่สุด
-- **กิจกรรมล่าสุด (Recent Activities):** ล็อกการเคลื่อนไหวของการยืม-คืนในระบบ
-
-### 6. 🔐 ระบบกำหนดสิทธิ์การใช้งาน (Role-based Authentication)
-- **Librarian (Admin):** สิทธิ์ระดับผู้ดูแล สามารถเพิ่ม/แก้ไข/ลบ ข้อมูลหนังสือ สมาชิก นักเขียน หมวดหมู่ และออกรายการยืม-คืนได้
-- **Reader (Member):** สิทธิ์ระดับผู้อ่าน สำหรับการค้นหาหนังสือ ดูหมวดหมู่ และตรวจสอบรายการยืมของตนเอง
-
-### 7. 📁 การส่งออกรายงาน (CSV Export)
-- รองรับการ Export ข้อมูลรายการยืม-คืน (Loans List) ออกเป็นไฟล์ CSV เพื่อนำไปใช้วิเคราะห์หรือทำรายงานต่อใน Excel / Google Sheets
+The system is designed to support both **Librarians (Admins)** and **Members (Readers)**. Librarians can manage books, members, authors, categories, and borrowing records, while readers can browse, search, and explore the library's collection of books and manga.
 
 ---
 
-## 🗄️ โครงสร้างฐานข้อมูล (Database Architecture & Schema)
+## 🌐 Live Demo
 
-โปรเจกต์รองรับการเชื่อมต่อกับ **Supabase Cloud PostgreSQL Database** โดยมีโครงสร้างตาราง (Relational Tables) ทั้งหมด 6 ตารางหลัก ดังนี้:
+You can try **NekoShelf** directly in your browser without installing anything:
+
+🚀 **Live Website:** https://nekoshelf.web.app/
+
+---
+
+## 🌟 Key Features
+
+### 📚 Book & Manga Catalog Management
+
+* **Search & Filter:** Quickly search for books by title, author, category, or ISBN.
+* **Stock Management:** Track the total number of copies (`total_copies`) and currently available copies (`available_copies`).
+* **Book Detail View:** Display book covers, descriptions, publication years, ISBNs, author information, and availability status.
+
+### 🔄 Borrowing & Return Management
+
+* **Issue Loans:** Create new borrowing records with member information, borrowing dates, and due dates.
+* **Return Books:** Process returned books and automatically update the number of available copies.
+* **Overdue Tracker:** Detect and clearly display overdue borrowing records with visual status indicators.
+
+### 👥 Member Management
+
+* Store member information including member codes, names, email addresses, and phone numbers.
+* Track active borrowing records for each member.
+* Easily manage and organize library members.
+
+### ✍️ Authors & Categories Management
+
+* **Authors Manager:** Manage authors and illustrators, including biographies and profile images.
+* **Categories Manager:** Organize books and manga into categories such as Manga, Shonen Action, Fantasy, and more.
+
+### 📊 Interactive Analytics Dashboard
+
+* **Key Statistics:** Display the total number of books, members, active loans, and overdue records.
+* **Popular Books:** Show the most frequently borrowed books.
+* **Recent Activities:** Track recent borrowing and return activities.
+
+### 🔐 Role-Based Access
+
+The application supports different user roles:
+
+| Role                  | Description                                                                       |
+| --------------------- | --------------------------------------------------------------------------------- |
+| **Librarian / Admin** | Full access to manage books, members, authors, categories, and borrowing records. |
+| **Reader / Member**   | Browse books, explore categories, and view personal borrowing information.        |
+
+### 📁 CSV Export
+
+Export borrowing and loan records as CSV files for further analysis using Microsoft Excel or Google Sheets.
+
+---
+
+## 🗄️ Database Architecture
+
+NekoShelf uses **Supabase PostgreSQL** with six main relational tables:
 
 ```mermaid
 erDiagram
@@ -111,194 +133,189 @@ erDiagram
     }
 ```
 
-### รายละเอียดตารางในฐานข้อมูล (Tables Specification)
+### Database Tables
 
-1. **`authors`**: เก็บข้อมูลนักเขียน/นักวาด
-   - `id` (BIGINT / SERIAL, Primary Key)
-   - `name` (TEXT / VARCHAR) - ชื่อนักเขียน
-   - `bio` (TEXT) - ประวัตินักเขียน
-   - `image` (TEXT) - URL หรือ Path ของรูปภาพนักเขียน
-   - `created_at` (TIMESTAMPTZ)
-
-2. **`categories`**: เก็บหมวดหมู่หนังสือ
-   - `id` (BIGINT / SERIAL, Primary Key)
-   - `name` (TEXT / VARCHAR, Unique) - ชื่อหมวดหมู่
-   - `description` (TEXT) - คำอธิบายหมวดหมู่
-   - `created_at` (TIMESTAMPTZ)
-
-3. **`books`**: เก็บข้อมูลหนังสือและมังงะ
-   - `id` (BIGINT / SERIAL, Primary Key)
-   - `title` (TEXT / VARCHAR) - ชื่อเรื่อง
-   - `author_id` (BIGINT, Foreign Key -> `authors.id`)
-   - `category_id` (BIGINT, Foreign Key -> `categories.id`)
-   - `isbn` (TEXT / VARCHAR) - รหัส ISBN
-   - `published_year` (INT) - ปีที่พิมพ์
-   - `total_copies` (INT) - จำนวนเล่มทั้งหมด
-   - `available_copies` (INT) - จำนวนเล่มที่พร้อมยืม
-   - `cover_image` (TEXT) - URL รูปปก
-   - `description` (TEXT) - เรื่องย่อ
-   - `created_at` (TIMESTAMPTZ)
-
-4. **`members`**: เก็บข้อมูลสมาชิกห้องสมุด
-   - `id` (BIGINT / SERIAL, Primary Key)
-   - `member_code` (TEXT / VARCHAR, Unique) - รหัสสมาชิก (เช่น MEM001)
-   - `name` (TEXT / VARCHAR) - ชื่อสมาชิก
-   - `email` (TEXT / VARCHAR) - อีเมล
-   - `phone` (TEXT / VARCHAR) - เบอร์โทรศัพท์
-   - `created_at` (TIMESTAMPTZ)
-
-5. **`loans`**: เก็บประวัติและสถานะการยืม-คืน
-   - `id` (BIGINT / SERIAL, Primary Key)
-   - `book_id` (BIGINT, Foreign Key -> `books.id`)
-   - `member_id` (BIGINT, Foreign Key -> `members.id`)
-   - `borrow_date` (DATE) - วันที่ยืม
-   - `due_date` (DATE) - กำหนดส่งคืน
-   - `return_date` (DATE, Nullable) - วันที่ส่งคืนจริง (NULL = ยังไม่คืน)
-   - `created_at` (TIMESTAMPTZ)
-
-6. **`users`**: เก็บข้อมูลสิทธิ์ผู้ใช้งานในระบบ
-   - `id` (BIGINT / SERIAL, Primary Key)
-   - `username` (TEXT, Unique)
-   - `email` (TEXT, Unique)
-   - `role` (TEXT) - 'admin' หรือ 'user'
-   - `name` (TEXT)
+| Table        | Description                                                                          |
+| ------------ | ------------------------------------------------------------------------------------ |
+| `authors`    | Stores author and illustrator information, including biographies and profile images. |
+| `categories` | Stores book and manga categories.                                                    |
+| `books`      | Stores book and manga information, including stock and availability.                 |
+| `members`    | Stores library member information.                                                   |
+| `loans`      | Stores borrowing history and loan status.                                            |
+| `users`      | Stores user accounts and role-based access information.                              |
 
 ---
 
-## 📜 รายชื่อ SQL Script ในโปรเจกต์ (Database Scripts)
+## 📜 Database Scripts
 
-- [`supabase-schema.sql`](file:///c:/Users/Fujiwara/code/nekoshelf/supabase-schema.sql): สคริปต์สร้างตารางพื้นฐาน พร้อมปิดใช้งาน RLS และ Seed Data วรรณกรรมคลาสสิก
-- [`manga-demo-seed.sql`](file:///c:/Users/Fujiwara/code/nekoshelf/manga-demo-seed.sql): สคริปต์สร้างตารางพร้อม Seed Data มังงะยอดนิยม (One Piece, Demon Slayer, Attack on Titan, Dragon Ball, Jujutsu Kaisen, Naruto) และรายชื่อนักเขียนมังงะ
-- [`database-academic-suite.sql`](file:///c:/Users/Fujiwara/code/nekoshelf/database-academic-suite.sql): สคริปต์ SQL แบบย่อสำหรับการติดตั้งบนระบบอื่นๆ
-- [`update-authors-schema.sql`](file:///c:/Users/Fujiwara/code/nekoshelf/update-authors-schema.sql): สคริปต์อัปเดตเพิ่มคอลัมน์ `image` ให้กับตาราง `authors`
+The project includes several SQL scripts for database setup and sample data:
 
----
-
-## 🛠️ เทคโนโลยีที่ใช้ (Tech Stack)
-
-| ส่วนประกอบ | เทคโนโลยีที่เลือกใช้ |
-| :--- | :--- |
-| **Frontend Framework** | React 19 (Hooks, Functional Components) |
-| **Build Tool & Dev Server** | Vite 6 |
-| **Styling & UI** | Tailwind CSS v4, Lucide React Icons |
-| **Routing** | React Router v7 |
-| **Database & Backend Services** | Supabase JS Client (PostgreSQL Cloud) |
-| **Hosting & Deployment** | Firebase Hosting |
+* `supabase-schema.sql` – Creates the basic database schema and includes sample data.
+* `manga-demo-seed.sql` – Creates tables and sample data for popular manga titles and authors.
+* `database-academic-suite.sql` – A simplified SQL script for installation on other systems.
+* `update-authors-schema.sql` – Updates the `authors` table by adding an `image` column.
 
 ---
 
-## 📁 โครงสร้างไดเรกทอรีโปรเจกต์ (Project Structure)
+## 🛠️ Tech Stack
+
+| Component                       | Technology                         |
+| :------------------------------ | :--------------------------------- |
+| **Frontend Framework**          | React 19                           |
+| **Build Tool & Dev Server**     | Vite 6                             |
+| **Styling & UI**                | Tailwind CSS v4                    |
+| **Icons**                       | Lucide React                       |
+| **Routing**                     | React Router v7                    |
+| **Database & Backend Services** | Supabase JS Client with PostgreSQL |
+| **Hosting & Deployment**        | Firebase Hosting                   |
+
+---
+
+## 📁 Project Structure
 
 ```text
-nekoshelf/
-├── public/                  # Static assets (logo, icons, images)
+NekoShelf/
+├── public/                  # Static assets
 │   ├── logo.png             # NekoShelf main logo
-│   └── user_logo.png        # User default avatar icon
+│   └── user_logo.png        # Default user avatar
 ├── src/
-│   ├── components/          # UI Components
-│   │   ├── AuthModal.jsx    # Modal เข้าสู่ระบบ/สมัครสมาชิก
-│   │   ├── AuthorList.jsx   # จัดการ/แสดงผลรายชื่อนักเขียน
-│   │   ├── BookDetailPage.jsx # รายละเอียดหนังสือและเรื่องย่อ
-│   │   ├── BookList.jsx     # คลังหนังสือ พร้อมฟิลเตอร์ค้นหา
-│   │   ├── BookModal.jsx    # ฟอร์มเพิ่ม/แก้ไขหนังสือ
-│   │   ├── CategoryList.jsx # จัดการหมวดหมู่หนังสือ
-│   │   ├── Dashboard.jsx    # แดชบอร์ดสรุปสถิติต่างๆ
-│   │   ├── DbStatusNotice.jsx # ป้ายแจ้งเตือนสถานะการเชื่อมต่อ Supabase
-│   │   ├── LoanList.jsx     # จัดการรายการยืม-คืน และ Export CSV
-│   │   ├── MemberList.jsx   # จัดการข้อมูลสมาชิก
-│   │   ├── Navbar.jsx       # แถบเมนูด้านบนพร้อมช่องค้นหา
-│   │   ├── Sidebar.jsx      # แถบเมนูด้านข้างแบ่งตามสิทธิ์ผู้ใช้
-│   │   └── UserDashboard.jsx # หน้า Portal สำหรับผู้อ่าน
+│   ├── components/          # UI components
+│   │   ├── AuthModal.jsx
+│   │   ├── AuthorList.jsx
+│   │   ├── BookDetailPage.jsx
+│   │   ├── BookList.jsx
+│   │   ├── BookModal.jsx
+│   │   ├── CategoryList.jsx
+│   │   ├── Dashboard.jsx
+│   │   ├── DbStatusNotice.jsx
+│   │   ├── LoanList.jsx
+│   │   ├── MemberList.jsx
+│   │   ├── Navbar.jsx
+│   │   ├── Sidebar.jsx
+│   │   └── UserDashboard.jsx
 │   ├── utils/
-│   │   └── csvExport.js     # ฟังก์ชัน Helper สำหรับ Export CSV
-│   ├── App.jsx              # Main Component & State Management
-│   ├── main.jsx             # React DOM Entry point
-│   ├── index.css            # Tailwind Directives & Custom CSS
-│   └── supabaseClient.js    # การเชื่อมต่อ Supabase Client
-├── .env                     # Environment Variables
-├── firebase.json            # การตั้งค่า Firebase Hosting
-├── .firebaserc              # การกำหนด Firebase Target Project (`nekoshelf`)
-├── package.json             # NPM dependencies & scripts
-├── vite.config.js           # การตั้งค่า Vite
-└── README.md                # เอกสารประกอบโปรเจกต์
+│   │   └── csvExport.js     # CSV export helper
+│   ├── App.jsx              # Main application component
+│   ├── main.jsx             # React entry point
+│   ├── index.css            # Tailwind directives and custom CSS
+│   └── supabaseClient.js    # Supabase client configuration
+├── .env                     # Environment variables
+├── firebase.json            # Firebase Hosting configuration
+├── .firebaserc              # Firebase project configuration
+├── package.json             # NPM dependencies and scripts
+├── vite.config.js           # Vite configuration
+└── README.md                # Project documentation
 ```
 
 ---
 
-## 🚀 ขั้นตอนการติดตั้งและเปิดใช้งาน (Installation & Setup)
+## 🚀 Installation & Setup
 
-### 1. โคลนคลังโค้ด (Clone Repository)
+### 1. Clone the Repository
+
 ```bash
-git clone https://github.com/HakusaiTH/mvc-book-library.git nekoshelf
-cd nekoshelf
+git clone https://github.com/HakusaiTH/NekoShelf.git
+cd NekoShelf
 ```
 
-### 2. ติดตั้ง Dependencies
+### 2. Install Dependencies
+
 ```bash
 npm install
 ```
 
-### 3. ตั้งค่า Environment Variables (`.env`)
-สร้างไฟล์ `.env` ที่โฟลเดอร์ Root ของโปรเจกต์:
+### 3. Configure Environment Variables
+
+Create a `.env` file in the root directory of the project:
+
 ```env
 VITE_SUPABASE_URL=https://your-supabase-project-id.supabase.co
 VITE_SUPABASE_ANON_KEY=your-supabase-anon-key
 ```
-*(หมายเหตุ: หากไม่มีการระบุค่า Supabase ระบบจะสลับไปใช้ **Mock Data System** ในแอปโดยอัตโนมัติเพื่อให้สามารถใช้งานและทดสอบได้ทันที)*
 
-### 4. รัน Dev Server
+> **Note:** If Supabase environment variables are not configured, the application can use its mock data system for testing and development.
+
+### 4. Run the Development Server
+
 ```bash
 npm run dev
 ```
-เปิดเบราว์เซอร์ไปที่ `http://localhost:5173`
+
+Then open your browser and navigate to:
+
+```text
+http://localhost:5173
+```
 
 ---
 
-## ☁️ การ Deploy ลง Firebase Hosting
+## ☁️ Deployment
 
-โปรเจกต์นี้ได้รับการตั้งค่าให้ Deploy บน **Firebase Hosting** ภายใต้ Firebase Project: `nekoshelf`
+NekoShelf is deployed using **Firebase Hosting**.
 
-### ขั้นตอนการ Build และ Deploy:
-
-1. **สร้าง Production Build:**
-   ```bash
-   npm run build
-   ```
-
-2. **Deploy ไปยัง Firebase Hosting:**
-   ```bash
-   cmd /c "npx firebase-tools deploy --only hosting --project nekoshelf"
-   ```
-
----
-
-## 🐙 การใช้งาน Git (Git Workflow)
-
-ส่งโค้ดและรายการอัปเดตขึ้นไปยัง GitHub Repository:
+### Build the Production Version
 
 ```bash
-# ตรวจสอบสถานะการเปลี่ยนแปลง
+npm run build
+```
+
+### Deploy to Firebase Hosting
+
+```bash
+npx firebase-tools deploy --only hosting
+```
+
+---
+
+## 🐙 Git Workflow
+
+Use the following commands to save and push your changes to GitHub:
+
+```bash
+# Check the current status
 git status
 
-# บันทึกไฟล์ทั้งหมดเข้า Staging
+# Add all changes to staging
 git add .
 
-# บันทึก Commit
-git commit -m "feat: rename project to NekoShelf, add comprehensive README, configure Firebase hosting"
+# Create a commit
+git commit -m "feat: update project"
 
-# Push ขึ้น Git Server
+# Push to the remote repository
 git push origin main
 ```
 
 ---
 
-## 📄 ข้อมูลเพิ่มเติมเกี่ยวกับบัญชีทดสอบ (Demo Credentials)
+## 📄 Demo Credentials
 
-| บทบาท (Role) | อีเมล (Email) | รหัสผ่าน (Password) | สิทธิ์การใช้งาน |
-| :--- | :--- | :--- | :--- |
-| **Librarian / Admin** | `admin@nekoshelf.com` | `123456` | สิทธิ์เต็ม (เพิ่ม/แก้ไข/ลบ หนังสือ, สมาชิก, ยืม-คืน) |
-| **Reader / Member** | `user@nekoshelf.com` | `123456` | สิทธิ์ค้นหา ดูหนังสือ หมวดหมู่ และการยืมของตนเอง |
+| Role                  | Email                 | Password | Permissions                                                           |
+| :-------------------- | :-------------------- | :------- | :-------------------------------------------------------------------- |
+| **Librarian / Admin** | `admin@nekoshelf.com` | `123456` | Full access to manage books, members, loans, and system data          |
+| **Reader / Member**   | `user@nekoshelf.com`  | `123456` | Browse books, explore categories, and view personal borrowing records |
 
 ---
 
-Developed with ❤️ for **NekoShelf** Project.
+## 🤝 Contributing
+
+Contributions, suggestions, and improvements are welcome! Feel free to fork this repository, create a new branch, and submit a pull request.
+
+---
+
+## 📄 License
+
+This project is developed for educational and demonstration purposes.
+
+---
+
+## ❤️ About NekoShelf
+
+NekoShelf was created as a modern and user-friendly solution for managing libraries, books, and manga collections. The system combines catalog management, member management, borrowing workflows, analytics, and role-based access into a single web application.
+
+🌐 **Try it now:** https://nekoshelf.web.app/
+
+💻 **GitHub Repository:** https://github.com/HakusaiTH/NekoShelf
+
+---
+
+Developed with ❤️ for the **NekoShelf Project**.

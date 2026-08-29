@@ -14,7 +14,7 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess, initialMode 
     e.preventDefault();
     const userProfile = {
       name: name || (email.split('@')[0] || (role === 'admin' ? 'Librarian Admin' : 'Reader Member')),
-      email: email || (role === 'admin' ? 'admin@libraryhub.com' : 'user@libraryhub.com'),
+      email: email || (role === 'admin' ? 'admin@nekoshelf.com' : 'user@nekoshelf.com'),
       role: role
     };
     onAuthSuccess(userProfile);
@@ -33,7 +33,7 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess, initialMode 
 
         <div className="text-center space-y-1">
           <h2 className="text-xl font-extrabold text-slate-900">
-            {mode === 'signin' ? 'Sign In to Library Hub' : 'Create Reader Account'}
+            {mode === 'signin' ? 'Sign In to NekoShelf' : 'Create Reader Account'}
           </h2>
           <p className="text-xs text-slate-600 font-semibold">
             {mode === 'signin' ? 'Select your role and enter credentials' : 'Register to borrow books and manga'}
@@ -114,7 +114,7 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess, initialMode 
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder={role === 'admin' ? 'admin@libraryhub.com' : 'user@libraryhub.com'}
+              placeholder={role === 'admin' ? 'admin@nekoshelf.com' : 'user@nekoshelf.com'}
               className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-sm text-slate-900 focus:outline-none focus:border-sky-500 font-medium"
             />
           </div>
@@ -145,8 +145,8 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess, initialMode 
             <Info className="w-3.5 h-3.5 text-sky-600" />
             <span>Demo Test Credentials:</span>
           </div>
-          <div>Admin: <code className="bg-white px-1.5 py-0.5 rounded text-sky-800 font-mono font-bold border">admin@libraryhub.com</code> / pass: <code className="bg-white px-1.5 py-0.5 rounded text-sky-800 font-mono font-bold border">123456</code></div>
-          <div>Member: <code className="bg-white px-1.5 py-0.5 rounded text-sky-800 font-mono font-bold border">user@libraryhub.com</code> / pass: <code className="bg-white px-1.5 py-0.5 rounded text-sky-800 font-mono font-bold border">123456</code></div>
+          <div>Admin: <code className="bg-white px-1.5 py-0.5 rounded text-sky-800 font-mono font-bold border">admin@nekoshelf.com</code> / pass: <code className="bg-white px-1.5 py-0.5 rounded text-sky-800 font-mono font-bold border">123456</code></div>
+          <div>Member: <code className="bg-white px-1.5 py-0.5 rounded text-sky-800 font-mono font-bold border">user@nekoshelf.com</code> / pass: <code className="bg-white px-1.5 py-0.5 rounded text-sky-800 font-mono font-bold border">123456</code></div>
         </div>
       </div>
     </div>

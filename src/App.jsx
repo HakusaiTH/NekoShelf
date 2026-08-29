@@ -159,7 +159,7 @@ function AppContent() {
   // User Profile & Authentication State
   const [user, setUser] = useState({
     name: 'Admin Manager',
-    email: 'admin@libraryhub.com',
+    email: 'admin@nekoshelf.com',
     role: 'admin'
   });
 
